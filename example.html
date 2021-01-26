@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<style>
+		* {
+			margin     : 0;
+			padding    : 0;
+			box-sizing : border-box;
+		}
+		
+		#slider_box {
+			width    : 500px;
+			height   : 280px;
+			margin   : 30px auto 0 auto;
+			box-shadow: 0 0 0 1px crimson;
+		}
+		
+		#slider_box button {
+			position : absolute;
+		}
+		
+		#left {
+			left      : 10px;
+			top       : 50%;
+			transform : translateY(-50%);
+			z-index: 999;
+		}
+		
+		#right {
+			right     : 10px;
+			top       : 50%;
+			transform : translateY(-50%);
+			z-index: 999;
+		}
+		
+		#slider {
+			display  : flex;
+		}
+		
+		#slider > div {
+			width           : 500px;
+			height          : 280px;
+			font-size       : 20px;
+			display         : flex;
+			justify-content : center;
+			align-items     : center;
+			border          : 1px solid black;
+		}
+		
+		#control_box {
+			display         : flex;
+			justify-content : center;
+			margin-top      : 20px;
+		}
+	</style>
+	<title>Document</title>
+</head>
+<body>
+<div id="slider_box">
+	<button id="left">left</button>
+	<div id="slider">
+		<div>0</div>
+		<div>1</div>
+		<div>2</div>
+		<div>3</div>
+		<div>4</div>
+		<div>5</div>
+		<div>6</div>
+		<div>7</div>
+		<div>8</div>
+		<div>9</div>
+	</div>
+	<button id="right">right</button>
+</div>
+<div id="control_box">
+	<input id="index" type="number">
+	<button id="set">set</button>
+</div>
+<script src="orderSlide.js"></script>
+<script>
+	let slide = new OrderSlide("#slider_box", "#slider", 1000);
+	document.querySelector("#left").addEventListener("click", () => slide.slide("prev"));
+	document.querySelector("#right").addEventListener("click", () => slide.slide("next"));
+	document.querySelector("#set").addEventListener("click", () => slide.set(document.querySelector("#index").value));
+</script>
+</body>
+</html>
