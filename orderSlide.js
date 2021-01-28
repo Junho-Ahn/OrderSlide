@@ -153,7 +153,7 @@ const OrderSlide = class {
 	
 	// amount : 이동하는 index 수
 	// 왼쪽으로 슬라이드
-	left(amount) {
+	left(amount = 1) {
 		if(this.isStop) {
 			amount = this.inRange(amount);
 			if(amount < 1)
@@ -175,7 +175,7 @@ const OrderSlide = class {
 	
 	// amount : 이동하는 index 수
 	// 오른쪽으로 슬라이드
-	right(amount) {
+	right(amount = 1) {
 		if(this.isStop) {
 			amount = this.inRange(amount);
 			if(amount < 1)
