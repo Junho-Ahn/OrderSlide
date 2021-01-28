@@ -64,9 +64,9 @@
 	<div id="slider">
 		<div>0</div>
 		<div>1</div>
-		<div>2</div>
-		<div>3</div>
-		<div>4</div>
+<!--		<div>2</div>-->
+<!--		<div>3</div>-->
+<!--		<div>4</div>-->
 <!--		<div>5</div>-->
 <!--		<div>6</div>-->
 <!--		<div>7</div>-->
@@ -81,7 +81,7 @@
 </div>
 <script src="orderSlide.js"></script>
 <script>
-	let slide = new OrderSlide("#slider_box", "#slider", 1000, 1);
+	let slide = new OrderSlide("#slider_box", "#slider");
 	document.querySelector("#left").addEventListener("click", () => slide.left(1));
 	document.querySelector("#right").addEventListener("click", () => slide.right(1));
 	document.querySelector("#set").addEventListener("click", () => slide.to(document.querySelector("#index").value));
