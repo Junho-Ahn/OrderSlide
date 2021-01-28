@@ -156,6 +156,8 @@ const OrderSlide = class {
 	left(amount) {
 		if(this.isStop) {
 			amount = this.inRange(amount);
+			if(amount < 1)
+				return;
 			// 이동 잠금
 			this.isStop = false;
 			// 이동할 만큼 정렬
@@ -176,6 +178,8 @@ const OrderSlide = class {
 	right(amount) {
 		if(this.isStop) {
 			amount = this.inRange(amount);
+			if(amount < 1)
+				return;
 			// 이동 잠금
 			this.isStop = false;
 			// 이동할 만큼 정렬
