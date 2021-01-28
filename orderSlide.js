@@ -194,7 +194,7 @@ const OrderSlide = class {
 	// index : 이동할 슬라이드의 index
 	// 특정 index로 슬라이드
 	to(index) {
-		const difference = index - this.data.index;
+		const difference = this.inRange(index) - this.data.index;
 		if(difference === 0) {
 			return;
 		}
@@ -203,7 +203,6 @@ const OrderSlide = class {
 		const straight = Math.abs(difference);
 		// 4 <-> 0 경유하는 거리
 		const cross = this.elem.item.length - straight;
-		
 		if(difference < 0) {
 			if(straight < cross) {
 				this.left(straight);
