@@ -69,6 +69,7 @@ const OrderSlide = class {
 		this.elem.slider.style.position = "absolute";
 		this.elem.slider.style.display = "flex";
 		this.elem.slider.style.transitionProperty = "left";
+		this.elem.slider.style.willChange = "left";
 		
 		// defaultIndex 적용
 		this.sortAsc().then();
