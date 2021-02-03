@@ -6,6 +6,7 @@
  * [Arguments]
  * String boxSelector
  * String sliderSelector
+ * String dosBoxSelector
  * Integer duration
  * Integer defaultIndex
  *
@@ -22,6 +23,7 @@
  * Boolean animate
  *
  * [Functions]
+ * Void colorizeDot()
  * Integer rangeCycle(Integer value)
  * Integer inRange(Integer value)
  * Promise sortAsc(Integer count)
@@ -36,15 +38,17 @@
 const OrderSlide = class {
 	// boxSelector : 최상위 부모 요소 셀렉터, 외부 슬라이드 요소
 	// sliderSelector : 2순위 부모 셀렉터, 움직이는 내부 슬라이드 요소
+	// dotOption : 도트 생성 옵션
 	// duration : 한 번 슬라이드에 걸리는 시간, 단위 : ms
 	// default_index : 기본으로 표시되는 요소의 순서, 0부터 시작
-	constructor(boxSelector, sliderSelector = "*", duration = 400, defaultIndex = 0) {
+	constructor(boxSelector, sliderSelector, dotOption = null, duration = 400, defaultIndex = 0) {
 		// slideBox : 최상위 부모
 		// slider : 2순위 부모
 		// item : 자식(최소 3개 필요)
 		this.elem = {
 			slideBox: document.querySelector(boxSelector),
-			slider  : document.querySelector(boxSelector + ">" + sliderSelector),
+			slider  : document.querySelector(sliderSelector),
+			dot: null,
 			item    : document.querySelectorAll(boxSelector + ">" + sliderSelector + ">*")
 		};
 		
@@ -55,6 +59,25 @@ const OrderSlide = class {
 			index   : defaultIndex,
 			unit    : this.elem.slideBox.offsetWidth,
 			duration: duration
+		}
+		
+		// 도트 생성
+		if(dotOption != null){
+			this.elem.dot = {
+				box: document.querySelector(dotOption.selector),
+				tag: dotOption.tag === undefined ? "div" : dotOption.tag,
+				class: dotOption.className === undefined ? "dot" : dotOption.className,
+				flag: dotOption.flagName === undefined ? "on" : dotOption.flagName
+			};
+			for(let i = 0; i < this.elem.item.length; i++) {
+				this.elem.dot.box.innerHTML += `<${this.elem.dot.tag} class="${this.elem.dot.class}" data-index="${i}"></${this.elem.dot.tag}>`;
+			}
+			for(const dot of this.elem.dot.box.querySelectorAll(`.${this.elem.dot.class}`)) {
+				dot.addEventListener("click", e => {
+					this.to(e.target.dataset.index);
+				});
+			}
+			this.colorizeDot();
 		}
 		
 		// 슬라이드 중 클릭 방지 플래그
@@ -73,6 +96,16 @@ const OrderSlide = class {
 		
 		// defaultIndex 적용
 		this.sortAsc().then();
+	}
+	
+	// 현재 index에 해당하는 도트에 클래스 부여
+	colorizeDot(){
+		if(this.elem.dot != null){
+			for(const dot of this.elem.dot.box.querySelectorAll(`.${this.elem.dot.class}`)) {
+				dot.classList.remove(this.elem.dot.flag);
+			}
+			this.elem.dot.box.querySelector(`.${this.elem.dot.class}[data-index="${this.data.index}"]`).classList.add(this.elem.dot.flag);
+		}
 	}
 	
 	// value : 조정될 값
@@ -101,7 +134,7 @@ const OrderSlide = class {
 				// 현재 슬라이드부터 count만큼 오름차순(L->R) 정렬, 나머지 오른쪽으로
 				this.elem.item[this.rangeCycle(this.data.index + i)].style.order = `${i <= count ? i : this.elem.item.length}`;
 			}
-			this.setAnimate(false).then();
+			this.setAnimate(false);
 			// 맨 왼쪽(현재 슬라이드)으로 이동
 			this.setView(0).then(() => resolve());
 		});
@@ -115,7 +148,7 @@ const OrderSlide = class {
 				// 현재 슬라이드부터 count만큼 내림차순(R->L) 정렬, 나머지 오른쪽으로
 				this.elem.item[this.rangeCycle(this.data.index - i)].style.order = `${i <= count ? this.elem.item.length - i - 1 : this.elem.item.length}`;
 			}
-			this.setAnimate(false).then();
+			this.setAnimate(false);
 			// 현재 슬라이드로 이동
 			this.setView(count).then(() => resolve());
 		});
@@ -145,11 +178,8 @@ const OrderSlide = class {
 	// yes : 애니메이션 여부
 	// 애니메이션 On/Off 조정
 	setAnimate(yes = true) {
-		return new Promise(resolve => {
-			this.animate = yes;
-			this.elem.slider.style.transitionDuration = `${yes ? this.data.duration : 0}ms`;
-			setTimeout(() => resolve());
-		});
+		this.animate = yes;
+		this.elem.slider.style.transitionDuration = `${yes ? this.data.duration : 0}ms`;
 	}
 	
 	// amount : 이동하는 index 수
@@ -157,15 +187,18 @@ const OrderSlide = class {
 	left(amount = 1) {
 		if(this.isStop) {
 			amount = this.inRange(amount);
-			if(amount < 1)
+			if(amount < 1) {
 				return;
+			}
 			// 이동 잠금
 			this.isStop = false;
 			// 이동할 만큼 정렬
 			this.sortDesc(amount).then(() => {
 				this.data.index = this.rangeCycle(this.data.index - amount);
+				this.colorizeDot();
 				// 이동 후 이동 잠금 해제
-				this.setAnimate().then(() => {
+				this.setAnimate();
+				setTimeout(() => {
 					this.setView(0).then(() => {
 						this.isStop = true;
 					});
@@ -179,15 +212,18 @@ const OrderSlide = class {
 	right(amount = 1) {
 		if(this.isStop) {
 			amount = this.inRange(amount);
-			if(amount < 1)
+			if(amount < 1) {
 				return;
+			}
 			// 이동 잠금
 			this.isStop = false;
 			// 이동할 만큼 정렬
 			this.sortAsc(amount).then(() => {
 				this.data.index = this.rangeCycle(this.data.index + amount);
+				this.colorizeDot();
 				// 이동 후 이동 잠금 해제
-				this.setAnimate().then(() => {
+				this.setAnimate();
+				setTimeout(() => {
 					this.setView(amount).then(() => {
 						this.isStop = true;
 					});
