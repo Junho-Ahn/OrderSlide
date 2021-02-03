@@ -12,10 +12,10 @@
 		}
 		
 		#slider_box {
-			width    : 500px;
-			height   : 280px;
-			margin   : 30px auto 0 auto;
-			/*box-shadow: 0 0 0 1px crimson;*/
+			width      : 500px;
+			height     : 280px;
+			margin     : 30px auto 0 auto;
+			box-shadow : 0 0 0 1px crimson;
 		}
 		
 		#slider_box button {
@@ -26,18 +26,18 @@
 			left      : 10px;
 			top       : 50%;
 			transform : translateY(-50%);
-			z-index: 999;
+			z-index   : 999;
 		}
 		
 		#right {
 			right     : 10px;
 			top       : 50%;
 			transform : translateY(-50%);
-			z-index: 999;
+			z-index   : 999;
 		}
 		
 		#slider {
-			display  : flex;
+			display : flex;
 		}
 		
 		#slider > div {
@@ -53,7 +53,28 @@
 		#control_box {
 			display         : flex;
 			justify-content : center;
-			margin-top      : 20px;
+			margin-top      : 8px;
+		}
+		
+		#dots_box {
+			display         : flex;
+			justify-content : center;
+			align-items     : center;
+			gap             : 4px;
+			height          : 16px;
+			margin-top      : 8px;
+		}
+		
+		#dots_box .moveTo {
+			border-radius : 999px;
+			height        : 12px;
+			width         : 12px;
+			border        : 1px solid black;
+			cursor        : pointer;
+		}
+		
+		#dots_box .moveTo.now {
+			background-color : black;
 		}
 	</style>
 	<title>Document</title>
@@ -67,13 +88,25 @@
 		<div>2</div>
 		<div>3</div>
 		<div>4</div>
-<!--		<div>5</div>-->
-<!--		<div>6</div>-->
-<!--		<div>7</div>-->
-<!--		<div>8</div>-->
-<!--		<div>9</div>-->
+		<div>5</div>
+		<div>6</div>
+		<div>7</div>
+		<div>8</div>
+		<div>9</div>
+		<div>10</div>
+		<div>11</div>
+		<div>12</div>
+		<div>13</div>
+		<div>14</div>
+		<div>15</div>
+		<div>16</div>
+		<div>17</div>
+		<div>18</div>
+		<div>19</div>
 	</div>
 	<button id="right">right</button>
+</div>
+<div id="dots_box">
 </div>
 <div id="control_box">
 	<input id="index" type="number">
@@ -81,9 +114,15 @@
 </div>
 <script src="orderSlide.js"></script>
 <script>
-	let slide = new OrderSlide("#slider_box", "#slider", 1000, 1);
-	document.querySelector("#left").addEventListener("click", () => slide.left(1));
-	document.querySelector("#right").addEventListener("click", () => slide.right(1));
+	const dot_option = {
+		selector: "#dots_box",
+		tag: "div",
+		className: "moveTo",
+		flagName: "now"
+	};
+	let slide = new OrderSlide("#slider_box", "#slider", dot_option, 2000);
+	document.querySelector("#left").addEventListener("click", () => slide.left());
+	document.querySelector("#right").addEventListener("click", () => slide.right());
 	document.querySelector("#set").addEventListener("click", () => slide.to(document.querySelector("#index").value));
 </script>
 </body>
