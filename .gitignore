@@ -1,4 +1,7 @@
-.gitattributes
 .idea
 node_modules
+dist
+.gitattributes
 package-lock.json
+legacy.html
+babel.config.json
