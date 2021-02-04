@@ -1,5 +1,3 @@
-"use strict";
-
 /*
  * Class OrderSlide
  *
@@ -82,8 +80,11 @@ const OrderSlide = class {
 		
 		// 슬라이드 중 클릭 방지 플래그
 		this.isStop = true;
+		
 		// 애니메이션 여부 플래그
 		this.animate = false;
+		
+		this.autoSlideInterval = null;
 		
 		// 필수 스타일 적용
 		this.elem.slideBox.style.position = "relative";
@@ -96,6 +97,13 @@ const OrderSlide = class {
 		
 		// defaultIndex 적용
 		this.sortAsc().then();
+	}
+	
+	autoSlide(period, goLeft = false) {
+		clearInterval(this.autoSlideInterval);
+		if(period){
+			setInterval(()=> goLeft ? this.left(1) : this.right(1), period + this.data.duration);
+		}
 	}
 	
 	// 현재 index에 해당하는 도트에 클래스 부여

@@ -120,7 +120,8 @@
 		className: "moveTo",
 		flagName: "now"
 	};
-	let slide = new OrderSlide("#slider_box", "#slider", dot_option, 2000);
+	const slide = new OrderSlide("#slider_box", "#slider", dot_option, 1000, 19);
+	slide.autoSlide(2000, true);
 	document.querySelector("#left").addEventListener("click", () => slide.left());
 	document.querySelector("#right").addEventListener("click", () => slide.right());
 	document.querySelector("#set").addEventListener("click", () => slide.to(document.querySelector("#index").value));
