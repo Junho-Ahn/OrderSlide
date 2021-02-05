@@ -14,6 +14,7 @@ const dot_option = {
 const slide = new OrderSlide("#slider_box", "#slider", dot_option, 1500, 0);
 slide.autoSlide(2000);
 document.querySelector("#left").addEventListener("click", () => slide.left());
+$("#left").on("click", () => slide.left()); // when using JQuery
 document.querySelector("#right").addEventListener("click", () => slide.right());
 document.querySelector("#set").addEventListener("click", () => slide.to(document.querySelector("#index").value));
 ```
