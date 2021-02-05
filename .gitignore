@@ -5,3 +5,4 @@ dist
 package-lock.json
 legacy.html
 babel.config.json
+.babelrc
