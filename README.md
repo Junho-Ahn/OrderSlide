@@ -13,11 +13,13 @@ const dot_option = {
 };
 const slide = new OrderSlide("#slider_box", "#slider", dot_option, 1500, 0);
 slide.autoSlide(2000);
+
+// pure JS
 document.querySelector("#left").addEventListener("click", () => slide.left());
 document.querySelector("#right").addEventListener("click", () => slide.right());
 document.querySelector("#set").addEventListener("click", () => slide.to(document.querySelector("#index").value));
 
-// when using JQuery
+// use JQuery library
 $("#left").on("click", () => slide.left());
 $("#right").on("click", () => slide.right());
 $("#set").on("click", () => slide.to($("#index")[0].value));
