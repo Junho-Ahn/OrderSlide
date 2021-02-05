@@ -12,8 +12,8 @@
 		}
 		
 		#slider_box {
-			width      : 500px;
-			height     : 280px;
+			width      : 200px;
+			height     : 200px;
 			margin     : 30px auto 0 auto;
 			box-shadow : 0 0 0 1px crimson;
 		}
@@ -41,8 +41,8 @@
 		}
 		
 		#slider > div {
-			width           : 500px;
-			height          : 280px;
+			width           : 200px;
+			height          : 200px;
 			font-size       : 20px;
 			display         : flex;
 			justify-content : center;
@@ -92,17 +92,17 @@
 		<div>6</div>
 		<div>7</div>
 		<div>8</div>
-		<div>9</div>
-		<div>10</div>
-		<div>11</div>
-		<div>12</div>
-		<div>13</div>
-		<div>14</div>
-		<div>15</div>
-		<div>16</div>
-		<div>17</div>
-		<div>18</div>
-		<div>19</div>
+<!--		<div>9</div>-->
+<!--		<div>10</div>-->
+<!--		<div>11</div>-->
+<!--		<div>12</div>-->
+<!--		<div>13</div>-->
+<!--		<div>14</div>-->
+<!--		<div>15</div>-->
+<!--		<div>16</div>-->
+<!--		<div>17</div>-->
+<!--		<div>18</div>-->
+<!--		<div>19</div>-->
 	</div>
 	<button id="right">right</button>
 </div>
@@ -113,18 +113,6 @@
 	<button id="set">set</button>
 </div>
 <script src="orderSlide.js"></script>
-<script>
-	const dot_option = {
-		selector: "#dots_box",
-		tag: "div",
-		className: "moveTo",
-		flagName: "now"
-	};
-	const slide = new OrderSlide("#slider_box", "#slider", dot_option, 1000, 19);
-	slide.autoSlide(2000, true);
-	document.querySelector("#left").addEventListener("click", () => slide.left());
-	document.querySelector("#right").addEventListener("click", () => slide.right());
-	document.querySelector("#set").addEventListener("click", () => slide.to(document.querySelector("#index").value));
-</script>
+<script src="script.js"></script>
 </body>
 </html>
