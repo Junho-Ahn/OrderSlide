@@ -8,26 +8,26 @@ A slide library using Order property of Flexbox
 // 단일 / Single slide
 
 const selectors = {
-    box: "#slider_box", // required
-    slider: "#slider", // required
-    left: "#left", // optional
-    right: "#right" // optional
+    box: "#slider_box",     // required
+    slider: "#slider",      // required
+    left: "#left",          // optional
+    right: "#right"         // optional
 }
 
 // optional
 const slide_option = {
-    duration: 1500, // optional
-    defaultIndex: 0, // optional
-    autoSlide: 2000 // optional
+    duration: 1500,     // optional
+    defaultIndex: 0,    // optional
+    autoSlide: 2000     // optional
 };
 // optional
 // 개발자가 dot의 스타일을 설정해야 합니다
 // developer need to set style of the dots
 const dot_option = {
-    selector: "#dots_box", // required
-    tag: "div", // optional, default: div
-    className: "moveTo", // optional, default: dot
-    flagName: "now" // optional, default: on
+    selector: "#dots_box",  // required
+    tag: "div",             // optional, default: div
+    className: "moveTo",    // optional, default: dot
+    flagName: "now"         // optional, default: on
 };
 
 const slide = new OrderSlide(selectors, slide_option, dot_option);
