@@ -5,22 +5,25 @@ A slide library using Order property of Flexbox
 
 usage example:
 ```
-const dot_option = {
-	selector: "#dots_box",
-	tag: "div",
-	className: "moveTo",
-	flagName: "now"
+const selectors = {
+    box: "#slider_box",
+    slider: "#slider",
+    left: "#left",
+    right: "#right"
+}
+
+const slide_option = {
+    duration: 1500,
+    defaultIndex: 0,
+    autoSlide: 2000
 };
-const slide = new OrderSlide("#slider_box", "#slider", dot_option, 1500, 0);
-slide.autoSlide(2000);
 
-// pure JS
-document.querySelector("#left").addEventListener("click", () => slide.left());
-document.querySelector("#right").addEventListener("click", () => slide.right());
-document.querySelector("#set").addEventListener("click", () => slide.to(document.querySelector("#index").value));
+const dot_option = {
+    selector: "#dots_box",
+    tag: "div",
+    className: "moveTo",
+    flagName: "now"
+};
 
-// use JQuery library
-$("#left").on("click", () => slide.left());
-$("#right").on("click", () => slide.right());
-$("#set").on("click", () => slide.to($("#index")[0].value));
+const slide = new OrderSlide(selectors, slide_option, dot_option);
 ```
