@@ -21,8 +21,8 @@ const slide_option = {
     autoSlide: 2000     // optional
 };
 // optional
-// 개발자가 dot의 스타일을 설정해야 합니다
-// developer need to set style of the dots
+// 개발자가 dot box 요소를 만들고 dot의 스타일을 설정해야 합니다
+// developer need to create dot box element and set style of the dots
 const dot_option = {
     selector: "#dots_box",  // required
     tag: "div",             // optional, default: div
