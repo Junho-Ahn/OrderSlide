@@ -335,10 +335,6 @@ class OrderSlide{
 		}
 	}
 	
-	getInterval() {
-		return this.#autoSlideInterval;
-	}
-	
 	// amount : 이동하는 index 수
 	// 왼쪽으로 슬라이드
 	/**

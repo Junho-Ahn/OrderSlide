@@ -32,6 +32,28 @@ const dot_option = {
 
 const slide = new OrderSlide(selectors, slide_option, dot_option);
 
+// 자동 슬라이드를 끕니다
+// turn off auto slide
+slide.autoSlide(false);
+
+// 자동 슬라이드를 켭니다 ({n}ms 주기, true: 왼쪽 / false: 오른쪽)
+// turn on auto slide (slide every {n}ms, true: left / false: right)
+slide.autoSlide(1000, true);
+
+// 왼쪽으로 {n}칸(없으면 1칸) 이동합니다
+// slide {n} cells to left (1 cell if empty)
+slide.left(2);
+slide.left();
+
+// 오른쪽으로 {n}칸(없으면 1칸) 이동합니다
+// slide {n} cells to right (1 cell if empty)
+slide.right(2);
+slide.right();
+
+// {n}번째 index의 칸으로 이동합니다 (0부터 시작)
+// slide to cell which has {n}th index (count from 0)
+slide.to(1);
+
 // 다중 / Multiple slides
 
 const slides =
