@@ -36,10 +36,6 @@
 			z-index   : 999;
 		}
 		
-		#slider {
-			display : flex;
-		}
-		
 		#slider > div {
 			width           : 200px;
 			height          : 200px;
@@ -50,22 +46,15 @@
 			border          : 1px solid black;
 		}
 		
-		#control_box {
-			display         : flex;
-			justify-content : center;
-			margin-top      : 8px;
-		}
-		
 		#dots_box {
 			display         : flex;
 			justify-content : center;
 			align-items     : center;
-			gap             : 4px;
 			height          : 16px;
 			margin-top      : 8px;
 		}
 		
-		#dots_box .moveTo {
+		#dots_box .dot {
 			border-radius : 999px;
 			height        : 12px;
 			width         : 12px;
@@ -73,7 +62,11 @@
 			cursor        : pointer;
 		}
 		
-		#dots_box .moveTo.now {
+      #dots_box .dot:not(:last-child) {
+	       margin-right: 4px;
+      }
+		
+		#dots_box .dot.on {
 			background-color : black;
 		}
 	</style>
@@ -92,9 +85,9 @@
 		<div>6</div>
 		<div>7</div>
 		<div>8</div>
-<!--		<div>9</div>-->
-<!--		<div>10</div>-->
-<!--		<div>11</div>-->
+		<div>9</div>
+		<div>10</div>
+		<div>11</div>
 <!--		<div>12</div>-->
 <!--		<div>13</div>-->
 <!--		<div>14</div>-->
@@ -106,13 +99,31 @@
 	</div>
 	<button id="right">right</button>
 </div>
-<div id="dots_box">
-</div>
-<div id="control_box">
-	<input id="index" type="number">
-	<button id="set">set</button>
-</div>
+<div id="dots_box"></div>
 <script src="orderSlide.js"></script>
-<script src="script.js"></script>
+<!--<script src="script.js"></script>-->
+	<script>
+		var selectors = {
+			box: "#slider_box",
+			slider: "#slider",
+			left: "#left",
+			right: "#right"
+		}
+		
+		var slide_option = {
+			duration: 1500,
+			defaultIndex: 0,
+			autoSlide: 2000
+		};
+		
+		var dot_option = {
+			selector: "#dots_box",
+			tag: "div",
+			className: "moveTo",
+			flagName: "now"
+		};
+		
+		var slide = new OrderSlide(selectors, slide_option, dot_option);
+	</script>
 </body>
 </html>
