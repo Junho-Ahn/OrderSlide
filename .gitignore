@@ -1,3 +1,5 @@
 .idea
 orderSlide_legacy.js
 test.html
+node_modules
+package-lock.json
