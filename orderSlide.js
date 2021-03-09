@@ -98,9 +98,7 @@ class OrderSlide{
 		}
 		
 		// 도트 생성
-		console.log(dotOption != null && Object.keys(dotOption).length > 0);
-		if(dotOption != null && Object.keys(dotOption) > 0){
-			console.log(dotOption);
+		if(dotOption != null && Object.keys(dotOption).length > 0){
 			/**
 			 *
 			 * @type {{flag: string, box: Element, tag: string, class: string}}

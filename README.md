@@ -49,5 +49,7 @@ const slides =
     ... 
 ];
 
-slides.forEach(x => new OrderSlide(...x));
+for(const index in slides) {
+    slides[index] = new OrderSlide(...slides[index]);
+}
 ```

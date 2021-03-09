@@ -2,128 +2,118 @@
 <html lang="ko">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta name="viewport"
+	      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<style>
-		* {
-			margin     : 0;
-			padding    : 0;
-			box-sizing : border-box;
-		}
-		
-		#slider_box {
-			width      : 200px;
-			height     : 200px;
-			margin     : 30px auto 0 auto;
-			box-shadow : 0 0 0 1px crimson;
-		}
-		
-		#slider_box button {
-			position : absolute;
-		}
-		
-		#left {
-			left      : 10px;
-			top       : 50%;
-			transform : translateY(-50%);
-			z-index   : 999;
-		}
-		
-		#right {
-			right     : 10px;
-			top       : 50%;
-			transform : translateY(-50%);
-			z-index   : 999;
-		}
-		
-		#slider > div {
-			width           : 200px;
-			height          : 200px;
-			font-size       : 20px;
-			display         : flex;
-			justify-content : center;
-			align-items     : center;
-			border          : 1px solid black;
-		}
-		
-		#dots_box {
-			display         : flex;
-			justify-content : center;
-			align-items     : center;
-			height          : 16px;
-			margin-top      : 8px;
-		}
-		
-		#dots_box .dot {
-			border-radius : 999px;
-			height        : 12px;
-			width         : 12px;
-			border        : 1px solid black;
-			cursor        : pointer;
-		}
-		
-      #dots_box .dot:not(:last-child) {
-	       margin-right: 4px;
-      }
-		
-		#dots_box .dot.on {
-			background-color : black;
-		}
+       * {
+           margin     : 0;
+           padding    : 0;
+           box-sizing : border-box;
+       }
+
+       #slider_box {
+           width      : 200px;
+           height     : 200px;
+           margin     : 30px auto 0 auto;
+           box-shadow : 0 0 0 1px crimson;
+       }
+
+       #slider_box button {
+           position : absolute;
+       }
+
+       #left {
+           left      : 10px;
+           top       : 50%;
+           transform : translateY(-50%);
+           z-index   : 999;
+       }
+
+       #right {
+           right     : 10px;
+           top       : 50%;
+           transform : translateY(-50%);
+           z-index   : 999;
+       }
+
+       #slider > div {
+           width           : 200px;
+           height          : 200px;
+           font-size       : 20px;
+           display         : flex;
+           justify-content : center;
+           align-items     : center;
+           border          : 1px solid black;
+       }
+
+       #dots_box {
+           display         : flex;
+           justify-content : center;
+           align-items     : center;
+           height          : 16px;
+           margin-top      : 8px;
+       }
+
+       #dots_box .dot {
+           border-radius : 999px;
+           height        : 12px;
+           width         : 12px;
+           border        : 1px solid black;
+           cursor        : pointer;
+       }
+
+       #dots_box .dot:not(:last-child) {
+           margin-right : 4px;
+       }
+
+       #dots_box .dot.on {
+           background-color : black;
+       }
 	</style>
 	<title>Document</title>
 </head>
 <body>
-<div id="slider_box">
-	<button id="left">left</button>
-	<div id="slider">
-		<div>0</div>
-		<div>1</div>
-		<div>2</div>
-		<div>3</div>
-		<div>4</div>
-		<div>5</div>
-		<div>6</div>
-		<div>7</div>
-		<div>8</div>
-		<div>9</div>
-		<div>10</div>
-		<div>11</div>
-<!--		<div>12</div>-->
-<!--		<div>13</div>-->
-<!--		<div>14</div>-->
-<!--		<div>15</div>-->
-<!--		<div>16</div>-->
-<!--		<div>17</div>-->
-<!--		<div>18</div>-->
-<!--		<div>19</div>-->
+	<div id="slider_box">
+		<button id="left">left</button>
+		<div id="slider">
+			<div>0</div>
+			<div>1</div>
+			<div>2</div>
+			<div>3</div>
+			<div>4</div>
+			<div>5</div>
+			<div>6</div>
+			<div>7</div>
+			<div>8</div>
+			<div>9</div>
+		</div>
+		<button id="right">right</button>
 	</div>
-	<button id="right">right</button>
-</div>
-<div id="dots_box"></div>
-<script src="orderSlide.js"></script>
-<!--<script src="script.js"></script>-->
+	<div id="dots_box"></div>
+	<script src="orderSlide.js"></script>
 	<script>
-		var selectors = {
+		const selectors = {
 			box: "#slider_box",
 			slider: "#slider",
 			left: "#left",
 			right: "#right"
-		}
+		};
 		
-		var slide_option = {
+		const slide_option = {
 			duration: 1500,
 			defaultIndex: 0,
 			autoSlide: 2000
 		};
 		
-		var dot_option = {
+		const dot_option = {
 			selector: "#dots_box",
 			tag: "div",
-			className: "moveTo",
-			flagName: "now"
+			className: "dot",
+			flagName: "on"
 		};
 		
-		var slide = new OrderSlide(selectors, slide_option, dot_option);
+		const slide = new OrderSlide(selectors, slide_option, dot_option);
 	</script>
 </body>
 </html>
