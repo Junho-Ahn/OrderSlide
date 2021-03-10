@@ -37,9 +37,9 @@ class OrderSlide {
 	#touchMove = null;
 	
 	/**
-	 * @param {Object} selectorData
-	 * @param {Object} slideOption
-	 * @param {Object} dotOption
+	 * @param {Object} selectorData 슬라이더 요소 셀렉터 정보
+	 * @param {Object} slideOption 슬라이드 옵션
+	 * @param {Object} dotOption 도트 옵션
 	 */
 	constructor(selectorData, slideOption = null, dotOption = null) {
 		/**
