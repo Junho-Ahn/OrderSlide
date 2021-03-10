@@ -6,6 +6,10 @@ A slide library using Order property of Flexbox
 ---
 
 ### 사용 예제 / usage example
+- 스크립트 적용
+```html
+<script src="orderSlide.js"></script>
+```
 - 슬라이드 생성 / Create slide
 ```js
 const selectors = {
@@ -33,7 +37,7 @@ const dot_option = {
 
 const slide = new OrderSlide(selectors, slide_option, dot_option);
 ```
-- 자동 슬라이드 / Auto slide On (1000ms, to left)
+- 자동 슬라이드 / Auto slide On (every 1000ms, to left)
 ```js
 slide.autoSlideOn(1000, true);
 ```
