@@ -6,7 +6,7 @@ A slide library using Order property of Flexbox
 ---
 
 ### 사용 예제 / usage example
-- 스크립트 적용
+- 스크립트 적용 / apply script
 ```html
 <script src="orderSlide.js"></script>
 ```
