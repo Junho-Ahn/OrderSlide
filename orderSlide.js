@@ -89,7 +89,7 @@ class OrderSlide {
 		// dotOption이 null이 아닌 경우 dot 생성
 		if(dotOption != null && Object.keys(dotOption).length > 0) {
 			this.#elem.dot = {
-				box: document.querySelector(dotOption.selector),
+				box: document.querySelector(dotOption.box),
 				tag: dotOption.tag ?? "div",
 				class: dotOption.className ?? "dot",
 				flag: dotOption.flagName ?? "on"
@@ -273,6 +273,9 @@ class OrderSlide {
 				};
 				
 				this.#elem.slider.addEventListener("transitionend", transitionEnd);
+				
+				// 이동 종료 인식 실패시 예외처리
+				setTimeout(() => resolve(), this.#data.duration * 2);
 			} else {
 				// 즉시 resolve
 				setTimeout(() => resolve(), 25);

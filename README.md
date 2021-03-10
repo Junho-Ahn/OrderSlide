@@ -34,7 +34,7 @@ const slide_option = {
 
 // optional
 const dot_option = {
-	selector: "#dots_box",
+	box: "#dots_box",
 	tag: "div",             // optional, default: div
 	className: "moveTo",    // optional, default: dot
 	flagName: "now"         // optional, default: on
