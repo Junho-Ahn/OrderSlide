@@ -5,7 +5,7 @@ A slide library using Order property of Flexbox
 
 ---
 
-###사용 예제 / usage example
+### 사용 예제 / usage example
 - 슬라이드 생성 / Create slide
 ```js
 const selectors = {
