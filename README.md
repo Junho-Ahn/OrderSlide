@@ -8,10 +8,9 @@ A slide library using Order property of Flexbox
 
 ### 사용 예제 / usage example
 
-- 스크립트 적용 / apply script
+- 스크립트 적용 / applying script
 
 ```html
-
 <script src="orderSlide.js"></script>
 ```
 
@@ -19,10 +18,10 @@ A slide library using Order property of Flexbox
 
 ```js
 const selectors = {
-	box: "#slider_box",     // required
-	slider: "#slider",      // required
-	left: "#left",          // optional
-	right: "#right"         // optional
+	box: "#slider_box",
+	slider: "#slider",
+	left: "#left",    // optional
+	right: "#right"   // optional
 }
 
 // optional
@@ -30,12 +29,12 @@ const slide_option = {
 	duration: 1500,             // optional
 	defaultIndex: 0,            // optional
 	autoSlide: 2000,            // optional
-	autoSlideDirection: false   // optional
+	autoSlideIsLeft: false      // optional
 };
 
 // optional
 const dot_option = {
-	selector: "#dots_box",  // required
+	selector: "#dots_box",
 	tag: "div",             // optional, default: div
 	className: "moveTo",    // optional, default: dot
 	flagName: "now"         // optional, default: on
@@ -44,10 +43,13 @@ const dot_option = {
 const slide = new OrderSlide(selectors, slide_option, dot_option);
 ```
 
-- 자동 슬라이드 / Auto slide On (every 1000ms, to left)
-
+- 자동 슬라이드 / Auto slide On   
+  (주기 / period, 왼쪽여부 / is left)
+  (기본값 초기값 / default initial value)   
+  지정시 값 저장 / keep the value(s) if set custom value(s) in args.
 ```js
 slide.autoSlideOn(1000, true);
+slide.autoSlideOn();
 ```
 
 - 자동 슬라이드 / Auto slide Off

@@ -6,12 +6,35 @@
  */
 
 class OrderSlide {
+	
+	// 생성시 대입
 	#elem;
 	#data;
-	#isStop;
-	#animate;
-	#autoSlide;
 	#maxOrder;
+	
+	/**
+	 * @description isStop : 슬라이드 진행 중 여부
+	 * @type {boolean}
+	 */
+	#isStop = true;
+	
+	/**
+	 * @description animate : 애니메이션 여부
+	 * @type {boolean}
+	 */
+	#animate = false;
+	
+	/**
+	 * @description autoSlide : 자동 슬라이드 정보
+	 * @type {null|{period: number, isLeft: boolean, interval: number}}
+	 */
+	#autoSlide = null;
+	
+	/**
+	 * @description touchMove : 터치 슬라이드 left/right 판단용
+	 * @type {null|number}
+	 */
+	#touchMove = null;
 	
 	/**
 	 * @param {Object} selectorData
@@ -45,7 +68,7 @@ class OrderSlide {
 		this.#elem.right?.addEventListener("click", () => this.right());
 		
 		/**
-		 * @type {{index: (number), unit: number, duration: (number|string), timing: (string), autoSlide: (number), autoSlideDirection: (boolean)}}
+		 * @type {{index: (number), unit: number, duration: (number|string), timing: (string), autoSlide: (number), autoSlideIsLeft: (boolean)}}
 		 * @description data : 슬라이드에 사용하는 변수 정보
 		 */
 		this.#data = {
@@ -60,25 +83,11 @@ class OrderSlide {
 			// 자동 슬라이드 주기
 			autoSlide: slideOption?.autoSlide ?? -1,
 			// 자동 슬라이드 방향, true - left / false - right
-			autoSlideDirection: slideOption?.direction ?? false
+			autoSlideIsLeft: slideOption?.isLeft ?? false
 		};
 		
-		// timing이 Array인 경우 내용 개수에 따라 베지어 곡선(4~) / 기본값(~3)으로 적용
-		if (typeof this.#data.timing === typeof []) {
-			if (this.#data.timing.length >= 4) {
-				this.#data.timing = `cubic-bezier(${this.#data.timing[0]}, ${this.#data.timing[1]}, ${this.#data.timing[2]}, ${this.#data.timing[3]})`;
-			} else {
-				this.#data.timing = "ease";
-			}
-		}
-		
-		// autoSlide가 0 이상인 경우 자동 슬라이드 설정
-		if (this.#data.autoSlide >= 0) {
-			this.autoSlideOn(this.#data.autoSlide, this.#data.autoSlideDirection);
-		}
-		
 		// dotOption이 null이 아닌 경우 dot 생성
-		if (dotOption != null && Object.keys(dotOption).length > 0) {
+		if(dotOption != null && Object.keys(dotOption).length > 0) {
 			this.#elem.dot = {
 				box: document.querySelector(dotOption.selector),
 				tag: dotOption.tag ?? "div",
@@ -87,7 +96,7 @@ class OrderSlide {
 			};
 			
 			// dot 요소 추가
-			for (let i = 0; i < this.#elem.item.length; i++) {
+			for(let i = 0; i < this.#elem.item.length; i++) {
 				this.#elem.dot.box.innerHTML += `<${this.#elem.dot.tag} class="${this.#elem.dot.class}" data-index="${i}"></${this.#elem.dot.tag}>`;
 			}
 			
@@ -95,7 +104,7 @@ class OrderSlide {
 			 * @event onclick
 			 * @description 클릭시 슬라이드 이동
 			 */
-			for (const dot of this.#elem.dot.box.querySelectorAll(`.${this.#elem.dot.class}`)) {
+			for(const dot of this.#elem.dot.box.querySelectorAll(`.${this.#elem.dot.class}`)) {
 				dot.addEventListener("click", e => {
 					this.to(+e.currentTarget.dataset.index);
 				});
@@ -105,23 +114,19 @@ class OrderSlide {
 			this.#colorizeDot();
 		}
 		
-		/**
-		 * @description isStop : 슬라이드 진행 중 여부
-		 * @type {boolean}
-		 */
-		this.#isStop = true;
+		// timing이 Array인 경우 내용 개수에 따라 베지어 곡선(4~) / 기본값(~3)으로 적용
+		if(typeof this.#data.timing === typeof []) {
+			if(this.#data.timing.length >= 4) {
+				this.#data.timing = `cubic-bezier(${this.#data.timing[0]}, ${this.#data.timing[1]}, ${this.#data.timing[2]}, ${this.#data.timing[3]})`;
+			} else {
+				this.#data.timing = "ease";
+			}
+		}
 		
-		/**
-		 * @description animate : 애니메이션 여부
-		 * @type {boolean}
-		 */
-		this.#animate = false;
-		
-		/**
-		 * @description autoSlide : 자동 슬라이드 정보
-		 * @type {null}
-		 */
-		this.#autoSlide = null;
+		// autoSlide가 0 이상인 경우 자동 슬라이드 설정
+		if(this.#data.autoSlide >= 0) {
+			this.autoSlideOn(this.#data.autoSlide, this.#data.autoSlideIsLeft);
+		}
 		
 		/**
 		 * @description maxOrder : Order 속성 적용시 최댓값 설정
@@ -151,17 +156,11 @@ class OrderSlide {
 		this.#sortAsc().then();
 		
 		/**
-		 * @description touchMove : 터치 슬라이드 left/right 판단용
-		 * @type {null|number}
-		 */
-		this.touchMove = null;
-		
-		/**
 		 * @event ontouchstart
 		 * @description 터치 시작시 위치 저장
 		 */
 		this.#elem.slideBox.addEventListener("touchstart", e => {
-			this.touchMove = e.changedTouches[0].clientX;
+			this.#touchMove = e.changedTouches[0].clientX;
 		});
 		
 		/**
@@ -169,10 +168,10 @@ class OrderSlide {
 		 * @description 터치 종료시 위치와 시작시 위치 비교해 left/right 슬라이드
 		 */
 		this.#elem.slideBox.addEventListener("touchend", e => {
-			this.touchMove -= e.changedTouches[0].clientX;
-			if (this.touchMove > 0) {
+			this.#touchMove -= e.changedTouches[0].clientX;
+			if(this.#touchMove > 0) {
 				this.right();
-			} else if (this.touchMove < 0) {
+			} else if(this.#touchMove < 0) {
 				this.left();
 			}
 		});
@@ -182,9 +181,9 @@ class OrderSlide {
 	 * @description 현재 슬라이드에 해당하는 dot 색칠
 	 */
 	#colorizeDot() {
-		if (this.#elem.dot != null) {
+		if(this.#elem.dot != null) {
 			// 전체 제거
-			for (const dot of this.#elem.dot.box.querySelectorAll(`.${this.#elem.dot.class}`)) {
+			for(const dot of this.#elem.dot.box.querySelectorAll(`.${this.#elem.dot.class}`)) {
 				dot.classList.remove(this.#elem.dot.flag);
 			}
 			
@@ -201,11 +200,11 @@ class OrderSlide {
 	 * @returns {number}
 	 */
 	#rangeCycle(value) {
-		if (value >= this.#elem.item.length) {
+		if(value >= this.#elem.item.length) {
 			value -= this.#elem.item.length;
 		}
 		
-		if (value < 0) {
+		if(value < 0) {
 			value += this.#elem.item.length;
 		}
 		
@@ -229,7 +228,7 @@ class OrderSlide {
 	#sortAsc(count = 0) {
 		return new Promise(resolve => {
 			// 요소에 order 부여
-			for (let i = 0; i < this.#elem.item.length; i++) {
+			for(let i = 0; i < this.#elem.item.length; i++) {
 				this.#elem.item[this.#rangeCycle(this.#data.index + i)].style.order = `${i <= count ? i : this.#maxOrder}`;
 			}
 			
@@ -247,7 +246,7 @@ class OrderSlide {
 	#sortDesc(count = 0) {
 		return new Promise(resolve => {
 			// 요소에 order 부여
-			for (let i = 0; i < this.#elem.item.length; i++) {
+			for(let i = 0; i < this.#elem.item.length; i++) {
 				this.#elem.item[this.#rangeCycle(this.#data.index - i)].style.order = `${i <= count ? count - i : this.#maxOrder}`;
 			}
 			
@@ -265,9 +264,9 @@ class OrderSlide {
 	#setView(index) {
 		return new Promise(resolve => {
 			this.#elem.slider.style.left = `-${this.#data.unit * index}px`;
-			if (this.#animate) {
+			if(this.#animate) {
 				const transitionEnd = e => {
-					if (e.propertyName !== "left") return;
+					if(e.propertyName !== "left") return;
 					// 이동 종료시 리스너 삭제, resolve
 					this.#elem.slider.removeEventListener("transitionend", transitionEnd);
 					resolve();
@@ -295,12 +294,12 @@ class OrderSlide {
 	 * @returns {boolean}
 	 */
 	#prepareSlide() {
-		if (!this.#isStop) {
+		if(!this.#isStop) {
 			return false;
 		}
 		// 슬라이드 정지 플래그 off
 		this.#isStop = false;
-		if (this.#autoSlide != null) {
+		if(this.#autoSlide != null) {
 			// 자동 슬라이드 카운트다운 리셋
 			clearInterval(this.#autoSlide.interval);
 			this.#autoSlide.interval = setInterval(() => {
@@ -329,8 +328,10 @@ class OrderSlide {
 	 * @param {number}period [period]ms마다 자동 슬라이드
 	 * @param {boolean}goLeft true: 왼쪽, false: 오른쪽
 	 */
-	autoSlideOn(period, goLeft = false) {
-		if (typeof period === "number" && period > 0) {
+	autoSlideOn(period = this.#data.autoSlide, goLeft = this.#data.autoSlideIsLeft) {
+		if(typeof period === "number" && period > 0) {
+			this.#data.autoSlide = period;
+			this.#data.autoSlideIsLeft = goLeft;
 			this.#autoSlide = {
 				period: period,
 				isLeft: goLeft,
@@ -355,7 +356,7 @@ class OrderSlide {
 	 */
 	left(amount = 1) {
 		// 값 체크 및 초기작업
-		if (amount >= 1 && this.#prepareSlide()) {
+		if(amount >= 1 && this.#prepareSlide()) {
 			// 값 조정 및 정렬
 			amount = this.#inRange(amount);
 			this.#sortDesc(amount).then(() => {
@@ -373,7 +374,7 @@ class OrderSlide {
 	 */
 	right(amount = 1) {
 		// 값 체크 및 초기작업
-		if (amount >= 1 && this.#prepareSlide()) {
+		if(amount >= 1 && this.#prepareSlide()) {
 			// 값 조정 및 정렬
 			amount = this.#inRange(amount);
 			this.#sortAsc(amount).then(() => {
@@ -400,14 +401,14 @@ class OrderSlide {
 		const cross = this.#elem.item.length - straight;
 		
 		// 최단거리로 이동
-		if (difference < 0) {
-			if (straight < cross) {
+		if(difference < 0) {
+			if(straight < cross) {
 				this.left(straight);
 			} else {
 				this.right(cross);
 			}
-		} else if (difference > 0) {
-			if (straight < cross) {
+		} else if(difference > 0) {
+			if(straight < cross) {
 				this.right(straight);
 			} else {
 				this.left(cross);
