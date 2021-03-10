@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+	      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<style>
+		* {
+			margin     : 0;
+			padding    : 0;
+			box-sizing : border-box;
+		}
+		
+		#container {
+			display   : flex;
+			flex-wrap : wrap;
+		}
+		
+		.slideBox > div:first-child {
+			box-shadow : 0 0 0 1px crimson;
+			width      : 100px;
+			height     : 30px;
+		}
+		
+		.slideBox .left, .slideBox .right {
+			position  : absolute;
+			top       : 50%;
+			transform : translateY(-50%);
+			z-index   : 999;
+		}
+		
+		.left {
+			left : 10px;
+		}
+		
+		.right {
+			right : 10px;
+		}
+		
+		.slider > div {
+			width           : 100px;
+			height          : 30px;
+			border          : 1px solid black;
+			display         : flex;
+			justify-content : center;
+			align-items     : center;
+		}
+		
+		.slideBox > div:last-child {
+			margin-top      : 1px;
+			margin-bottom   : 2px;
+			display         : flex;
+			justify-content : center;
+			gap             : 1px;
+		}
+		
+		.dot {
+			border        : 1px solid black;
+			border-radius : 999px;
+			width         : 6px;
+			height        : 6px;
+			cursor        : pointer;
+		}
+		
+		.dot.on {
+			background : black;
+		}
+	</style>
+	<title>Document</title>
+</head>
+<body>
+<div id="container"></div>
+<script src="orderSlide.js"></script>
+<script>
+	const container = document.querySelector("#container");
+	(function test(amount) {
+		for(let i = 1; i <= amount; i++) {
+			container.innerHTML += `
+		<div class="slideBox">
+			<div class="slide${i}">
+				<button class="left"><</button>
+				<div class="slider">
+					<div>1</div>
+					<div>2</div>
+					<div>3</div>
+					<div>4</div>
+					<div>5</div>
+					<div>6</div>
+					<div>7</div>
+					<div>8</div>
+					<div>9</div>
+					<div>10</div>
+				</div>
+				<button class="right">></button>
+			</div>
+			<div class="dot${i}"></div>
+		</div>`;
+		}
+		
+		for(let i = 1; i <= amount; i++) {
+			new OrderSlide({
+				box: `.slide${i}`,
+				slider: `.slide${i} > .slider`,
+				left: `.slide${i} .left`,
+				right: `.slide${i} .right`
+			}, {
+				autoSlide: 200 + Math.floor(Math.random() * 1300),
+				autoSlideIsLeft: Math.random() < 0.5
+			}, {
+				box: `.dot${i}`
+			});
+		}
+		//	테스트할 슬라이더 개수를 적습니다
+	})(400);
+</script>
+</body>
+</html>

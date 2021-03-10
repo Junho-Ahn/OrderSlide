@@ -83,7 +83,7 @@ class OrderSlide {
 			// 자동 슬라이드 주기
 			autoSlide: slideOption?.autoSlide ?? -1,
 			// 자동 슬라이드 방향, true - left / false - right
-			autoSlideIsLeft: slideOption?.isLeft ?? false
+			autoSlideIsLeft: slideOption?.autoSlideIsLeft ?? false
 		};
 		
 		// dotOption이 null이 아닌 경우 dot 생성
