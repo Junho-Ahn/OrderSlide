@@ -5,6 +5,9 @@ Flex박스의 Order 속성을 활용한 슬라이드 라이브러리입니다
 A slide library using Order property of Flexbox
 
 ---
+JSDoc document : out/index.html
+
+---
 
 ### 사용 예제 / usage example
 
@@ -15,7 +18,7 @@ A slide library using Order property of Flexbox
 ```
 
 - 슬라이드 생성 / Create slide
-
+1. 슬라이더 요소 셀렉터 지정 / set selector of slider elements
 ```js
 const selectors = {
 	box: "#slider_box",
@@ -23,7 +26,9 @@ const selectors = {
 	left: "#left",    // optional
 	right: "#right"   // optional
 }
-
+```
+2. 슬라이드 옵션 설정 / set slide option
+```js
 // optional
 const slide_option = {
 	duration: 1500,             // optional
@@ -31,7 +36,11 @@ const slide_option = {
 	autoSlide: 2000,            // optional
 	autoSlideIsLeft: false      // optional
 };
-
+```
+3. 도트 옵션 설정 / set dot option  
+ 도트 스타일은 개발자가 지정해야 합니다  
+ developer need to set style of the dots
+```js
 // optional
 const dot_option = {
 	box: "#dots_box",
@@ -39,7 +48,9 @@ const dot_option = {
 	className: "moveTo",    // optional, default: dot
 	flagName: "now"         // optional, default: on
 };
-
+```
+4. 객체 생성 / create instance
+```js
 const slide = new OrderSlide(selectors, slide_option, dot_option);
 ```
 
