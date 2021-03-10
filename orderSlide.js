@@ -1,11 +1,11 @@
 /**
  * @author Junho Ahn <elliemion@gmail.com>
- * @version 1.1.0
+ * @version 1.1.1
  * @since 2021.3
  * @file written in es6+, pure JS
  */
 
-class OrderSlide{
+class OrderSlide {
 	#elem;
 	#data;
 	#isStop;
@@ -18,19 +18,23 @@ class OrderSlide{
 	 * @param slideOption
 	 * @param dotOption
 	 */
-	constructor(selectorData, slideOption = null, dotOption = null){
+	constructor(selectorData, slideOption = null, dotOption = null) {
 		/**
 		 * @constant
 		 * @type {{ slideBox: Element, slider: Element, item: NodeListOf<Element>, left: Element|null, right: Element|null, dot: Object|null}}
 		 * @description elem : 슬라이드에 사용하는 요소 정보
 		 */
 		this.#elem = {
+			// 1순위 요소, 외부 박스
 			slideBox: document.querySelector(selectorData.box),
+			// 2순위 요소, 내부 박스
 			slider: document.querySelector(selectorData.slider),
+			// 3순위 요소, 슬라이드 내용
 			item: document.querySelectorAll(selectorData.slider + ">*"),
+			// 왼쪽 이동 버튼
 			left: document.querySelector(selectorData.left),
-			right: document.querySelector(selectorData.right),
-			dot: null
+			// 오른쪽 이동 버튼
+			right: document.querySelector(selectorData.right)
 		};
 		
 		/**
@@ -45,36 +49,36 @@ class OrderSlide{
 		 * @description data : 슬라이드에 사용하는 변수 정보
 		 */
 		this.#data = {
+			// 현재 슬라이드의 index
 			index: slideOption?.defaultIndex ?? 0,
+			// 내부 박스의 이동 단위
 			unit: this.#elem.slideBox.offsetWidth,
+			// 이동 소요 시간
 			duration: slideOption?.duration ?? 400,
+			// 이동 효과
 			timing: slideOption?.timing ?? "ease",
+			// 자동 슬라이드 주기
 			autoSlide: slideOption?.autoSlide ?? -1,
+			// 자동 슬라이드 방향, true - left / false - right
 			autoSlideDirection: slideOption?.direction ?? false
 		};
 		
-		/**
-		 * @description timing이 Array인 경우 내용 개수에 따라 베지어 곡선(4~) / 기본값(~3)으로 적용
-		 */
-		if(typeof this.#data.timing === typeof []){
-			if(this.#data.timing.length >= 4){
+		// timing이 Array인 경우 내용 개수에 따라 베지어 곡선(4~) / 기본값(~3)으로 적용
+		if (typeof this.#data.timing === typeof []) {
+			if (this.#data.timing.length >= 4) {
 				this.#data.timing = `cubic-bezier(${this.#data.timing[0]}, ${this.#data.timing[1]}, ${this.#data.timing[2]}, ${this.#data.timing[3]})`;
-			}else{
+			} else {
 				this.#data.timing = "ease";
 			}
 		}
 		
-		/**
-		 * @description autoSlide가 0 이상인 경우 자동 슬라이드 설정
-		 */
-		if(this.#data.autoSlide >= 0){
-			this.autoSlide(this.#data.autoSlide, this.#data.autoSlideDirection);
+		// autoSlide가 0 이상인 경우 자동 슬라이드 설정
+		if (this.#data.autoSlide >= 0) {
+			this.autoSlideOn(this.#data.autoSlide, this.#data.autoSlideDirection);
 		}
 		
-		/**
-		 * @description dotOption이 null이 아닌 경우 dot 생성
-		 */
-		if(dotOption != null && Object.keys(dotOption).length > 0){
+		// dotOption이 null이 아닌 경우 dot 생성
+		if (dotOption != null && Object.keys(dotOption).length > 0) {
 			this.#elem.dot = {
 				box: document.querySelector(dotOption.selector),
 				tag: dotOption.tag ?? "div",
@@ -82,10 +86,8 @@ class OrderSlide{
 				flag: dotOption.flagName ?? "on"
 			};
 			
-			/**
-			 * @description dot 요소 추가
-			 */
-			for(let i = 0; i < this.#elem.item.length; i++){
+			// dot 요소 추가
+			for (let i = 0; i < this.#elem.item.length; i++) {
 				this.#elem.dot.box.innerHTML += `<${this.#elem.dot.tag} class="${this.#elem.dot.class}" data-index="${i}"></${this.#elem.dot.tag}>`;
 			}
 			
@@ -93,15 +95,13 @@ class OrderSlide{
 			 * @event onclick
 			 * @description 클릭시 슬라이드 이동
 			 */
-			for(const dot of this.#elem.dot.box.querySelectorAll(`.${this.#elem.dot.class}`)){
+			for (const dot of this.#elem.dot.box.querySelectorAll(`.${this.#elem.dot.class}`)) {
 				dot.addEventListener("click", e => {
 					this.to(+e.currentTarget.dataset.index);
 				});
 			}
 			
-			/**
-			 * @description 현재 슬라이드에 맞게 적용
-			 */
+			// 현재 슬라이드에 맞게 적용
 			this.#colorizeDot();
 		}
 		
@@ -147,9 +147,7 @@ class OrderSlide{
 		this.#elem.slider.style.transitionTimingFunction = this.#data.timing;
 		this.#elem.slider.style.willChange = "left";
 		
-		/**
-		 * @description defaultIndex 적용
-		 */
+		// defaultIndex 적용
 		this.#sortAsc().then();
 		
 		/**
@@ -172,9 +170,9 @@ class OrderSlide{
 		 */
 		this.#elem.slideBox.addEventListener("touchend", e => {
 			this.touchMove -= e.changedTouches[0].clientX;
-			if(this.touchMove > 0){
+			if (this.touchMove > 0) {
 				this.right();
-			}else if(this.touchMove < 0){
+			} else if (this.touchMove < 0) {
 				this.left();
 			}
 		});
@@ -183,15 +181,17 @@ class OrderSlide{
 	/**
 	 * @description 현재 슬라이드에 해당하는 dot 색칠
 	 */
-	#colorizeDot(){
-		if(this.#elem.dot != null){
-			for(const dot of this.#elem.dot.box.querySelectorAll(`.${this.#elem.dot.class}`)){
+	#colorizeDot() {
+		if (this.#elem.dot != null) {
+			// 전체 제거
+			for (const dot of this.#elem.dot.box.querySelectorAll(`.${this.#elem.dot.class}`)) {
 				dot.classList.remove(this.#elem.dot.flag);
 			}
 			
+			// 현재 슬라이드 적용
 			this.#elem.dot.box.querySelector(`.${this.#elem.dot.class}[data-index="${this.#data.index}"]`)
-			    .classList
-			    .add(this.#elem.dot.flag);
+				.classList
+				.add(this.#elem.dot.flag);
 		}
 	}
 	
@@ -200,12 +200,12 @@ class OrderSlide{
 	 * @param {number}value
 	 * @returns {number}
 	 */
-	#rangeCycle(value){
-		if(value >= this.#elem.item.length){
+	#rangeCycle(value) {
+		if (value >= this.#elem.item.length) {
 			value -= this.#elem.item.length;
 		}
 		
-		if(value < 0){
+		if (value < 0) {
 			value += this.#elem.item.length;
 		}
 		
@@ -217,7 +217,7 @@ class OrderSlide{
 	 * @param {number}value
 	 * @returns {number}
 	 */
-	#inRange(value){
+	#inRange(value) {
 		return Math.min(this.#elem.item.length - 1, Math.max(0, value));
 	}
 	
@@ -226,14 +226,15 @@ class OrderSlide{
 	 * @param {number}count
 	 * @returns {Promise<function>}
 	 */
-	#sortAsc(count = 0){
+	#sortAsc(count = 0) {
 		return new Promise(resolve => {
-			for(let i = 0; i < this.#elem.item.length; i++){
+			// 요소에 order 부여
+			for (let i = 0; i < this.#elem.item.length; i++) {
 				this.#elem.item[this.#rangeCycle(this.#data.index + i)].style.order = `${i <= count ? i : this.#maxOrder}`;
 			}
 			
+			// 애니메이션 없이 현재 슬라이드로 이동
 			this.#setAnimate(false);
-			// 맨 왼쪽(현재 슬라이드)으로 이동
 			this.#setView(0).then(() => resolve());
 		});
 	}
@@ -243,12 +244,14 @@ class OrderSlide{
 	 * @param {number}count
 	 * @returns {Promise<function>}
 	 */
-	#sortDesc(count = 0){
+	#sortDesc(count = 0) {
 		return new Promise(resolve => {
-			for(let i = 0; i < this.#elem.item.length; i++){
+			// 요소에 order 부여
+			for (let i = 0; i < this.#elem.item.length; i++) {
 				this.#elem.item[this.#rangeCycle(this.#data.index - i)].style.order = `${i <= count ? count - i : this.#maxOrder}`;
 			}
 			
+			// 애니메이션 없이 현재 슬라이드로 이동
 			this.#setAnimate(false);
 			this.#setView(count).then(() => resolve());
 		});
@@ -259,18 +262,20 @@ class OrderSlide{
 	 * @param {number}index
 	 * @returns {Promise<function>}
 	 */
-	#setView(index){
+	#setView(index) {
 		return new Promise(resolve => {
 			this.#elem.slider.style.left = `-${this.#data.unit * index}px`;
-			if(this.#animate){
+			if (this.#animate) {
 				const transitionEnd = e => {
-					if(e.propertyName !== "left") return;
+					if (e.propertyName !== "left") return;
+					// 이동 종료시 리스너 삭제, resolve
 					this.#elem.slider.removeEventListener("transitionend", transitionEnd);
 					resolve();
 				};
 				
 				this.#elem.slider.addEventListener("transitionend", transitionEnd);
-			}else{
+			} else {
+				// 즉시 resolve
 				setTimeout(() => resolve(), 25);
 			}
 		});
@@ -280,33 +285,52 @@ class OrderSlide{
 	 * @description 애니메이션 여부 변경, true: 사용 / false: 미사용
 	 * @param {boolean}yes
 	 */
-	#setAnimate(yes = true){
+	#setAnimate(yes = true) {
 		this.#animate = yes;
 		this.#elem.slider.style.transitionDuration = `${yes ? this.#data.duration : 0}ms`;
 	}
 	
 	/**
-	 * @description 슬라이드 잠금, 자동슬라이드 정지
+	 * @description 슬라이드 잠금, 자동슬라이드 리셋
+	 * @returns {boolean}
 	 */
-	#startSlide(){
+	#prepareSlide() {
+		if (!this.#isStop) {
+			return false;
+		}
+		// 슬라이드 정지 플래그 off
 		this.#isStop = false;
-		if(this.#autoSlide != null){
+		if (this.#autoSlide != null) {
+			// 자동 슬라이드 카운트다운 리셋
 			clearInterval(this.#autoSlide.interval);
 			this.#autoSlide.interval = setInterval(() => {
 				this.#autoSlide.isLeft ? this.left() : this.right();
 			}, this.#autoSlide.period + this.#data.duration);
 		}
+		return true;
 	}
 	
 	/**
-	 * @description 자동 슬라이드 컨트롤
-	 * @param {number|boolean}period number: [period]ms마다 자동 슬라이드, boolean: false인 경우 자동슬라이드 off 대응
+	 * @description 슬라이드 후 잠금 해제
+	 * @param {number} index
+	 */
+	#doSlide(index) {
+		this.#colorizeDot();
+		this.#setAnimate();
+		setTimeout(() => {
+			this.#setView(index).then(() => {
+				this.#isStop = true;
+			});
+		});
+	}
+	
+	/**
+	 * @description 자동 슬라이드 켜기
+	 * @param {number}period [period]ms마다 자동 슬라이드
 	 * @param {boolean}goLeft true: 왼쪽, false: 오른쪽
 	 */
-	autoSlide(period, goLeft = false){
-		if(!period && typeof period !== "number"){
-			clearInterval(this.#autoSlide.interval);
-		}else{
+	autoSlideOn(period, goLeft = false) {
+		if (typeof period === "number" && period > 0) {
 			this.#autoSlide = {
 				period: period,
 				isLeft: goLeft,
@@ -318,26 +342,27 @@ class OrderSlide{
 	}
 	
 	/**
+	 * @description 자동 슬라이드 끄기
+	 */
+	autoSlideOff() {
+		clearInterval(this.#autoSlide.interval);
+		this.#autoSlide = null;
+	}
+	
+	/**
 	 * @description 왼쪽으로 이동
 	 * @param {number}amount 이동하는 칸 수
 	 */
-	left(amount = 1){
-		if(this.#isStop){
+	left(amount = 1) {
+		// 값 체크 및 초기작업
+		if (amount >= 1 && this.#prepareSlide()) {
+			// 값 조정 및 정렬
 			amount = this.#inRange(amount);
-			if(amount < 1){
-				return;
-			}
-			
-			this.#startSlide();
 			this.#sortDesc(amount).then(() => {
+				// 목표 index 설정
 				this.#data.index = this.#rangeCycle(this.#data.index - amount);
-				this.#colorizeDot();
-				this.#setAnimate();
-				setTimeout(() => {
-					this.#setView(0).then(() => {
-						this.#isStop = true;
-					});
-				});
+				// 애니메이션
+				this.#doSlide(0);
 			});
 		}
 	}
@@ -346,23 +371,16 @@ class OrderSlide{
 	 * @description 오른쪽으로 이동
 	 * @param {number}amount 이동하는 칸 수
 	 */
-	right(amount = 1){
-		if(this.#isStop){
+	right(amount = 1) {
+		// 값 체크 및 초기작업
+		if (amount >= 1 && this.#prepareSlide()) {
+			// 값 조정 및 정렬
 			amount = this.#inRange(amount);
-			if(amount < 1){
-				return;
-			}
-			
-			this.#startSlide();
 			this.#sortAsc(amount).then(() => {
+				// 목표 index 설정
 				this.#data.index = this.#rangeCycle(this.#data.index + amount);
-				this.#colorizeDot();
-				this.#setAnimate();
-				setTimeout(() => {
-					this.#setView(amount).then(() => {
-						this.#isStop = true;
-					});
-				});
+				// 애니메이션
+				this.#doSlide(amount);
 			});
 		}
 	}
@@ -371,24 +389,27 @@ class OrderSlide{
 	 * @description 특정 칸으로 이동
 	 * @param {number}index 이동할 index (0부터 시작)
 	 */
-	to(index){
+	to(index) {
+		// 목표와 현재 index 수치 차이
 		const difference = this.#inRange(index) - this.#data.index;
-		if(difference === 0){
-			return;
-		}
 		
+		// 이동할 거리 0<->max 미경유
 		const straight = Math.abs(difference);
+		
+		// 이동할 거리 0<->max 경유
 		const cross = this.#elem.item.length - straight;
-		if(difference < 0){
-			if(straight < cross){
+		
+		// 최단거리로 이동
+		if (difference < 0) {
+			if (straight < cross) {
 				this.left(straight);
-			}else{
+			} else {
 				this.right(cross);
 			}
-		}else{
-			if(straight < cross){
+		} else if (difference > 0) {
+			if (straight < cross) {
 				this.right(straight);
-			}else{
+			} else {
 				this.left(cross);
 			}
 		}
