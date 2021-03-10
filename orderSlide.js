@@ -90,7 +90,7 @@ class OrderSlide {
 		if(dotOption != null && Object.keys(dotOption).length > 0) {
 			this.#elem.dot = {
 				box: document.querySelector(dotOption.box),
-				tag: dotOption.tag ?? "div",
+				tag: dotOption.tagName ?? "div",
 				class: dotOption.className ?? "dot",
 				flag: dotOption.flagName ?? "on"
 			};
