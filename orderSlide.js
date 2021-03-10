@@ -38,8 +38,8 @@ class OrderSlide {
 	
 	/**
 	 * @param {Object} selectorData
-	 * @param slideOption
-	 * @param dotOption
+	 * @param {Object} slideOption
+	 * @param {Object} dotOption
 	 */
 	constructor(selectorData, slideOption = null, dotOption = null) {
 		/**
