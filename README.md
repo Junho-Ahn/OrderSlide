@@ -42,8 +42,7 @@ slide.autoSlideOn(1000, true);
 slide.autoSlideOff();
 ```
 
-- 왼쪽/오른쪽으로 이동(기본 1칸)
-- move to left/right (default 1)
+- 왼쪽/오른쪽으로 이동(기본 1칸) / move to left/right (default 1)
 ```js
 slide.left(2);
 slide.left(); // 1
