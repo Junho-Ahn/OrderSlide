@@ -2,6 +2,8 @@
 
 Flex박스의 Order 속성을 활용한 슬라이드 라이브러리입니다
 
+습작이며, 개발 중단되었습니다
+
 A slide library using Order property of Flexbox
 
 ---
